@@ -1,10 +1,11 @@
 # 01 – Uno sguardo di insieme alle applicazioni web
 
-Fonte: Drive › Terzo anno › Tecnologie Web › Slide Deck - TWeb › "01 – Uno Sguardo di Insieme alle Applicazioni Web" (Picardi).
+Fonti: Drive › Terzo anno › Tecnologie Web › Slide Deck - TWeb › "01 – Uno Sguardo di Insieme alle Applicazioni Web" (Picardi); Moodle 2026/27 › `01-TWeb-IntroTeoria-01-2627-ppt.pdf` (45 slide, aggiornate all'8 ottobre 2026), da cui viene la sezione "Server, web server, web service e porte" (slide 8-11), assente nel deck di Drive. Il resto del deck di Moodle ha gli stessi argomenti, che non ho riconfrontato slide per slide [DA VERIFICARE].
 
 ## Mappa degli argomenti
 
 - [Cos'è il Web e come si indirizzano le risorse](#cosè-il-web-e-come-si-indirizzano-le-risorse)
+- [Server, web server, web service e porte](#server-web-server-web-service-e-porte)
 - [HTML e ipertesto](#html-e-ipertesto)
 - [Risorse statiche, dinamiche e programmi lato server](#risorse-statiche-dinamiche-e-programmi-lato-server)
 - [Anatomia di una transazione HTTP](#anatomia-di-una-transazione-http)
@@ -37,6 +38,20 @@ Per individuare le risorse si usa la **URL**, una stringa con formato preciso: `
 - *fragment* (dopo `#`): indica un punto preciso dentro una pagina HTML a cui il browser deve posizionarsi.
 
 HTTP lavora sopra TCP e IP, che identificano gli host con indirizzi numerici. Per questo prima di spedire la richiesta il browser interroga il **DNS** (Domain Name System), il servizio applicativo che traduce lo hostname nell'indirizzo IP; solo dopo la richiesta HTTP può partire.
+
+## Server, web server, web service e porte
+
+*Sezione dalle slide 8-11 del deck Moodle 2026/27.*
+
+Un **server** è un sistema, in genere un programma eseguito su un computer, che fornisce un servizio ad altri programmi detti client: il termine è molto generale. Ci sono web server (richieste HTTP/HTTPS), mail server, database server, file server, DNS server, e uno stesso computer può eseguirne molti insieme e quindi offrire più servizi. Il **browser**, dal canto suo, è un'applicazione che contiene dei motori: quello di rendering per HTML/CSS e quello JavaScript. Un **web server** è un server che parla soprattutto HTTP e HTTPS: riceve richieste e restituisce risposte, per esempio una pagina HTML, immagini, CSS e JavaScript, oppure l'accesso a delle API. Esempi: Apache, Nginx, Microsoft IIS, Tomcat.
+
+Un **web service** (servizio web) *non* è la stessa cosa di un web server: è una funzionalità accessibile in rete che permette a due applicazioni di comunicare e scambiarsi dati, l'esempio tipico è un'API REST (una richiesta `GET /api/prodotti` che riceve i prodotti in JSON). Il web service viene reso disponibile attraverso un web server.
+
+L'indirizzo IP identifica una macchina in una rete, ma la stessa macchina esegue più servizi: per distinguerli si usano le **porte**, e quando una richiesta arriva a un certo IP e a una certa porta il sistema operativo sa a quale programma consegnarla. Porte comuni: 80 HTTP, 443 HTTPS, 22 SSH, 25 e 587 SMTP, 5432 PostgreSQL. Una porta però non identifica per forza un singolo web service: servizi diversi possono stare dietro lo stesso web server e la stessa porta, e il server li distingue dal **percorso dell'URL** (`https://example.com:443/api/utenti` e `.../api/prodotti` usano entrambi la 443).
+
+Le slide usano come esempio le tecnologie che userai nel progetto. **Spring Boot** non è di per sé un web server: è un framework Java per applicazioni, spesso di back-end, che normalmente include un web server integrato, molto spesso **Tomcat**; Tomcat riceve le richieste HTTP e le passa all'applicazione. Durante lo sviluppo risponde di solito su `http://localhost:8080`. Il percorso di una richiesta è: browser → HTTP → Tomcat → Spring Boot (Controller → Service → Database), dove il Controller è il componente che gestisce certe richieste HTTP. **React** invece non è un web server ma una libreria JavaScript per costruire l'interfaccia grafica; in sviluppo, però, strumenti come **Vite** avviano un development server che permette al browser di raggiungere l'applicazione React, di solito su `http://localhost:5173`. Si hanno quindi due server HTTP distinti su due porte diverse (React/Vite sulla 5173, Spring Boot/Tomcat sulla 8080). Quando React deve mostrare i prodotti fa una richiesta `GET http://localhost:8080/api/prodotti`; Spring Boot interroga il database se serve e risponde in genere con un JSON, che React mostra all'utente. In produzione React e Spring Boot possono usare la stessa porta, perché i file di React possono essere serviti dallo stesso server del back-end.
+
+Questo spiega anche perché in sviluppo comparirà il problema della **Same-Origin Policy** descritto più sotto: le due porte sono due origini diverse.
 
 ## HTML e ipertesto
 

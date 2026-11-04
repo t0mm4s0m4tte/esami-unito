@@ -1,6 +1,6 @@
 # 03 – Programmare lato client: JavaScript e TypeScript nell'ambiente browser
 
-Fonte: Drive › Terzo anno › Tecnologie Web › Slide Deck - TWeb › "02 - Programmare Lato Client" (Picardi e Mauro, 2026).
+Fonti: Drive › Terzo anno › Tecnologie Web › Slide Deck - TWeb › "02 - Programmare Lato Client" (Picardi e Mauro, 2026) per le sezioni fino a TypeScript; Moodle 2026/27 › `02-TWeb-JavascriptTypescriptTeoria-03-2627-ppt.pdf` ("3 - Programmare lato client", 73 slide, Picardi e Mauro) per la sezione su fetch, Promise, async/await e JSON (slide 35-73), che nel deck di Drive non c'era. Il resto del deck di Moodle (slide 1-34) ha gli stessi argomenti delle sezioni sotto, che non ho riconfrontato slide per slide [DA VERIFICARE].
 
 ## Mappa degli argomenti
 
@@ -11,7 +11,7 @@ Fonte: Drive › Terzo anno › Tecnologie Web › Slide Deck - TWeb › "02 - P
 - [Il DOM](#il-dom)
 - [Eventi e event loop asincrono](#eventi-e-event-loop-asincrono)
 - [Prototipi, costruttori, classi, `this`](#prototipi-costruttori-classi-this)
-- [Asincronia oltre le callback: Promise, async/await, fetch](#asincronia-oltre-le-callback-promise-asyncawait-fetch)
+- [Fetch, Promise, async/await, JSON e API server-side](#fetch-promise-asyncawait-json-e-api-server-side)
 - [TypeScript](#typescript)
 - [Cose da saper fare all'esame](#cose-da-saper-fare-allesame)
 - [Dubbi](#dubbi)
@@ -240,11 +240,89 @@ const fido = new Cane("Fido");
 
 Quindi tutti gli oggetti creati con lo stesso costruttore condividono il prototipo: due oggetti sono della stessa **classe** se creati dallo stesso costruttore, e i metodi si assegnano alla "classe" aggiungendoli al prototipo (le proprietà sono dell'oggetto, con valori propri, non del prototipo). Il costrutto `class` è proprio questo "sotto il cofano": la classe è un costruttore, e i metodi dichiarati dentro vanno al prototipo del costruttore. Con `extends` la catena è: l'istanza → `Beagle.prototype` → `Cane.prototype` → `Object.prototype`.
 
-## Asincronia oltre le callback: Promise, async/await, fetch
+## Fetch, Promise, async/await, JSON e API server-side
 
-*Integrazione da fonti esterne (MDN), non dalle slide, che presentano l'asincronia solo con le callback; serve perché il corso userà richieste HTTP dal browser.*
+*Questa sezione segue le slide 35-73 del deck Moodle 2026/27. Nella versione precedente degli appunti era un'integrazione da MDN, perché il deck di Drive si fermava alle callback; la parte finale, "Approfondimento", resta da MDN.*
 
-Le callback funzionano, ma quando un'operazione asincrona ne richiede un'altra il codice si annida sempre di più e la gestione degli errori si frammenta ("pyramid of doom"). Una **Promise** rappresenta un risultato futuro e ha tre stati: *pending* (in attesa), *fulfilled* (riuscita, con un valore) o *rejected* (fallita, con un errore). Le Promise si concatenano con `then`, evitando l'annidamento, e un errore in un punto qualsiasi della catena si propaga fino al primo `catch`. Un dettaglio che spiega molto: i callback di `then` non vengono mai eseguiti in modo sincrono, ma accodati come *microtask*.
+### La fetch API
+
+Nel browser le richieste HTTP verso un server si fanno con un'unica funzione, `fetch(url: string, init?: RequestInit): Promise<Response>`. Se si passa solo l'URL è una GET. Per tutto il resto (in pratica la POST) si passa come secondo argomento un oggetto `RequestInit`, che ha tre campi opzionali: `method` (la stringa del metodo), `headers` (un oggetto con coppie nome-valore) e `body` (una stringa o `null`). Gli header che il programmatore imposta più spesso sono `Accept` (i tipi accettati in risposta), `Content-Type` (il tipo dei dati nel body) e `User-Agent`; molti altri li mette il browser da solo. Una GET non ha body, perché serve a ottenere dati; una POST invia dati e ha di solito un body di tipo `application/x-www-form-urlencoded` (il contenuto di un form compilato) oppure `application/json` (dati elaborati dall'app client-side e inviati dall'app stessa).
+
+```ts
+fetch("https://esempio.it/api/persone", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ nome: "Mario", cognome: "Rossi" })
+});
+```
+
+La cosa da capire bene è che `fetch` non restituisce la risposta ma una **Promise** di risposta, e ritorna subito: il codice dopo la chiamata prosegue senza aspettare. Le slide lo mostrano con un esempio in cui `console.log("1")` precede la `fetch`, due `then` stampano "3" e "4" e `console.log("2")` viene dopo la `fetch`: l'output è 1, 2, 3, 4, perché il codice sincrono finisce prima che il server risponda. I due `then` hanno compiti diversi. Il primo riceve l'oggetto `Response` (con `status`, `statusText`, `ok`, `headers`, `url`, `body`) e ne restituisce `response.json()`; il secondo riceve il body già trasformato da JSON in oggetto JavaScript. Il server manda una sola risposta HTTP, ma servono due passaggi perché leggere il body è a sua volta un'operazione asincrona.
+
+### Perché servono le Promise
+
+Le slide mostrano il problema con un esempio: una funzione `update` carica dati da una pagina web lenta (`caricaDaWebLento`), poi con un'informazione ricevuta legge un database grosso (`leggiDBGrosso`), e deve alla fine richiamare una callback `cb` di chi l'ha chiamata. Ogni passo è una callback dentro l'altra. Se poi `cb` deve ricevere anche l'informazione arrivata dal primo passo, bisogna cambiare le firme di tutte le callback e racchiudere i valori in funzioni intermedie. Il codice si annida e diventa difficile da leggere e da modificare: le Promise nascono per evitarlo.
+
+### Promise&lt;T&gt;: stati, `then`, `catch`, `finally`
+
+Un oggetto `Promise<T>` è la promessa di un dato di tipo `T`. Parte in stato *pending* e passa a *fulfilled* (successo) oppure a *rejected* (fallimento). Su una Promise si possono registrare tre tipi di funzioni, `then`, `catch` e `finally`, e ciascuna restituisce a sua volta una nuova Promise: è questo che permette di concatenarle.
+
+Il `then` associa una funzione che viene chiamata solo se e quando la Promise diventa *fulfilled*, e che riceve come unico parametro il valore con cui si è risolta (o nessun parametro). Il risultato di `x.then(fun)` è una nuova `Promise<U>`, dove `U` è il tipo restituito da `fun`. Il caso particolare è quando `fun` restituisce a sua volta una `Promise<X>`: la nuova Promise diventa una `Promise<X>` (una promessa di una promessa è una promessa) e avrà successo o fallirà secondo l'esito di quella terza Promise. Se invece `x` fallisce, anche la nuova Promise va in *rejected* con lo stesso errore, e i `then` successivi non vengono eseguiti: l'errore scorre lungo la catena finché qualcuno lo gestisce.
+
+Il `catch` associa una funzione chiamata solo se la Promise diventa *rejected*, e riceve l'errore. Anche `catch` restituisce una nuova Promise, e il modo in cui la usi decide cosa succede dopo. Se la funzione restituisce un valore (per esempio `return 0`), l'errore è stato "trasformato" in un risultato valido: la Promise risultante è *fulfilled* e il `then` successivo riceve quel valore, quindi la catena prosegue normalmente. Se invece la funzione fa un `throw` di un nuovo errore, la Promise risultante è *rejected* e toccherà a un ulteriore `catch` gestirla. Di solito `catch` si mette in coda dopo uno o più `then`.
+
+Il `finally` associa una funzione che viene eseguita quando la Promise esce dallo stato *pending*, qualunque sia l'esito. Serve a non ripetere lo stesso codice nel ramo di successo e in quello di errore, per esempio chiudere una connessione. La nuova Promise si comporta come quella di partenza (il risultato della funzione è ignorato), tranne se la funzione lancia un errore o restituisce una Promise che fallisce: allora fallisce anche lei. Anche `finally` permette di continuare a concatenare.
+
+```ts
+prom
+  .then((dati) => { usaDati(dati); })
+  .catch((err: Error) => { gestisciErrore(err); })
+  .finally(() => { chiudiConnessione(); });
+```
+
+### Combinare più operazioni asincrone
+
+Le slide classificano i modi di mettere insieme `N` operazioni asincrone in quattro schemi, ognuno con la sua costruzione.
+
+| Schema | Quando ha successo l'operazione composta | Costruzione |
+|---|---|---|
+| Congiunzione | solo quando **tutte** le operazioni finiscono con successo | `Promise.all([p1, p2, p3])` |
+| Disgiunzione | quando **una** finisce con successo | `Promise.any([p1, p2, p3])` |
+| Competizione (variante della disgiunzione) | quando una finisce con successo **prima che un'altra fallisca** | `Promise.race([p1, p2, p3])` |
+| Concatenazione | quando l'ultima finisce, e ogni operazione parte solo se la precedente è riuscita | catena di `.then` |
+
+`Promise.all` restituisce una `Promise<[T1, T2, T3]>` con l'array dei risultati nell'ordine delle Promise passate; va in *rejected* non appena una qualsiasi fallisce, con l'errore di quella che ha fallito per prima. `Promise.any` restituisce una `Promise<T1|T2|T3>` con il risultato della prima risolta con successo; va in *rejected* solo se falliscono tutte, e allora l'errore è un `AggregateError` che raccoglie gli errori di ciascuna. `Promise.race` si risolve appena la prima Promise si risolve, in qualunque modo: con lo stesso risultato della "vincente", che sia successo o errore. Nella concatenazione ogni `then` restituisce la Promise dell'operazione successiva, così la seconda parte solo quando la prima è finita:
+
+```ts
+const chain: Promise<T3> = op1(...)
+  .then((d: T1) => op2(...))
+  .then((d: T2) => op3(...));
+```
+
+### async / await
+
+`async` e `await` servono a rendere più leggibili le funzioni che concatenano molte Promise, e non aggiungono nulla al linguaggio: il codice che le usa si può sempre tradurre in una catena di `then`. Una funzione dichiarata `async` restituisce sempre una `Promise<T>`: dentro si può usare `await`, e quello che si ritorna (un `T`) viene incapsulato automaticamente in una Promise. L'`await` si mette davanti alla chiamata di una funzione che restituisce una `Promise<U>` e permette di trattarla come se restituisse direttamente un `U`; il codice che segue viene eseguito solo quando la Promise si risolve, ma l'attesa resta implicita.
+
+```ts
+async function loadData(): Promise<Data> {
+  const response = await fetch(url);
+  const data: Data = await response.json();
+  return data;
+}
+```
+
+### Il formato JSON
+
+JSON (JavaScript Object Notation) nasce in ambiente JavaScript per **serializzare** oggetti, soprattutto per trasmetterli in una connessione HTTP. Una stringa JSON contiene un valore semplice (numero come `3.14`, booleano, stringa tra virgolette, `null`), oppure un oggetto (`{ "chiave": VALORE, ... }`, con le chiavi sempre tra virgolette) oppure un array (`[ VALORE, ... ]`), annidabili a piacere. Si passa dall'oggetto alla stringa con `JSON.stringify(ogg)` (serializzazione) e dalla stringa all'oggetto con `JSON.parse(str)` (deserializzazione).
+
+Nel body di una richiesta, come visto sopra, si manda `JSON.stringify(oggettoDaInviare)` con l'header `Content-Type: application/json`. Nella risposta non si può leggere direttamente `res.body`: bisogna chiamare `res.json()`, che restituisce una Promise dell'oggetto contenuto. Il motivo è che il body di una `Response` non è una stringa ma un `ReadableStream`: quando la risposta arriva, i dati potrebbero non essere ancora tutti pervenuti (pensa a un video o a un'immagine), e anche per un JSON breve bisogna attendere che il trasferimento sia completo prima di deserializzare.
+
+### Comunicare con l'app server-side: l'API
+
+La slide conclusiva definisce lo scopo dell'**API** del server: esprimere le funzionalità offerte dall'app lato server. Per ogni funzionalità l'API dice come richiederla con una HTTPRequest (metodo, pathname o *route* ed eventuale body), che HTTPResponse aspettarsi in risposta (con il suo body) e quali altri effetti ha l'invocazione, in particolare sul **Data Model**. Per l'esame conviene saper descrivere ogni chiamata a un'API in questi tre elementi: richiesta, risposta, effetti sui dati.
+
+### Approfondimento: microtask e dettagli di `fetch`
+
+*Da qui in poi è integrazione da MDN, non dalle slide.*
 
 Il legame con l'event loop single-thread delle slide è questo: ci sono due code, quella dei **task** (timer, eventi del DOM, risposte di rete) e quella delle **microtask** (callback delle Promise). L'event loop prende un job alla volta e lo esegue fino in fondo (*run-to-completion*), e svuota **tutte** le microtask prima di passare al task successivo. Per questo `Promise.resolve().then(f)` esegue `f` prima di un `setTimeout(g, 0)`. E per questo una funzione sincrona molto lunga congela l'interfaccia anche se è avvolta in una Promise: serve un Web Worker per spostare il calcolo fuori dal thread principale.
 
@@ -313,10 +391,18 @@ Organizzazione: i sorgenti TypeScript in una cartella `src`; il compilatore li t
 - Spiegare event loop single-thread, esogeni vs endogeni, listener vs callback, perché le operazioni lente sono asincrone.
 - Spiegare prototype chain, overriding, `Object.create`, come funziona `new`, che `class` è zucchero sintattico, e `this` con arrow function e `bind`.
 - Spiegare a cosa serve TypeScript, come si compila, e cosa fanno `package.json`, `node_modules`, `tsconfig.json` (target, module, outDir), dev vs runtime dependencies.
+- Scrivere una `fetch` GET e una POST con body JSON (`method`, `headers`, `body`), e prevedere l'ordine dei `console.log` quando c'è codice sincrono dopo la `fetch`.
+- Descrivere stati e tipi delle Promise, cosa restituisce `then`/`catch`/`finally`, come un `catch` può "recuperare" un errore e come si propaga un errore nella catena.
+- Scegliere fra `Promise.all`, `any`, `race` e concatenazione per un problema dato, e riscrivere una catena di `then` con `async/await` (e viceversa).
+- Spiegare `JSON.stringify`/`JSON.parse` e perché serve `res.json()` (il body è uno stream, non una stringa).
 
 ## Dubbi
 
 - Nella slide sui cicli `for` c'è scritto `for(const elem in iterabile)` per gli iterabili, ma il ciclo sugli elementi è `for...of` (l'esempio infatti usa `of`): refuso della slide. `for...in` itera sulle chiavi (proprietà enumerabili), non sui valori.
 - `classList.has(...)` nelle slide è un errore: il metodo si chiama `classList.contains(...)` (confermato dagli esempi MDN; `has` esiste su `Set` e `Map`, da cui probabilmente la confusione). Allo stesso modo "settAttribute" è un refuso di `setAttribute`.
 - Il valore di `this` in una arrow function usata come proprietà di un oggetto, lasciato come domanda aperta nelle slide, è confermato da MDN: una arrow non ha un `this` proprio, ma prende quello dello scope in cui è scritta, e un object literal non crea uno scope, quindi non è l'oggetto. Vedi la nota in "`this` e binding".
-- Le slide non trattano ancora Promise, `async/await` e `fetch`: la sezione "Asincronia oltre le callback" qui sopra è un'integrazione da fonti esterne, non materiale del corso.
+- Sulla slide di `Promise.race` il risultato si chiama `disj` invece di `comp` (copia della slide sulla disgiunzione): refuso, la variabile è `comp`.
+- Nelle slide sulla concatenazione compaiono errori di sintassi negli esempi (un `;` e un `});` in più, `p2.then(x: T2 => op3(...))` senza parentesi attorno al parametro): il senso è chiaro ma il codice così non compila.
+- Nell'esempio con `as Promise<Persona>` il cast di TypeScript non controlla nulla a runtime: se il server manda un JSON diverso dal tipo atteso, l'errore compare più tardi [INT, da ricontrollare con la docente].
+- Le slide trattano `Promise.all`, `any` e `race` ma non `Promise.allSettled` (che aspetta tutte le Promise senza fermarsi al primo errore): lo cito solo come nota mia, non fa parte delle slide [INT].
+- Il resto della sezione "Approfondimento" (microtask, `response.ok`) viene da MDN e non dalle slide: la slide sulla `fetch` non dice che un 404 o un 500 non fanno andare la Promise in *rejected*.
