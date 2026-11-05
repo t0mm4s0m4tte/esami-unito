@@ -352,3 +352,7 @@ Per la teoria bisogna saper spiegare:
 - `[DA VERIFICARE]` Le slide citano per HTTP sia l'RFC 7231 (in confronto a RFC 5321/2822) sia le RFC 7230 e 9110: verificare quale usare come riferimento.
 - Le slide chiedono "perché esiste UDP?" e "cosa sono le analogie umane di risorse riservate o a richiesta?" senza rispondere: la prima ha risposta nei capitoli sul trasporto.
 - Il PDF caricato su Drive finisce alla slide di apertura di P2P (file distribution client-server): chiedere se è stato caricato in parte o se le slide su P2P, video e CDN, socket arriveranno separatamente.
+
+## Esercizi svolti collegati
+
+Gli esercizi del capitolo 2 di Sereno (SMTP, HTTP persistente e non persistente, intestazioni HTTP, proxy e cache, DNS, P2P centralizzato) sono svolti in [12-esercizi-sereno-cap1-cap2.md](12-esercizi-sereno-cap1-cap2.md); i problemi di Botta sono in [08-esercizi-cap2.md](08-esercizi-cap2.md).

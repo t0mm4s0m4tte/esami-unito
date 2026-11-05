@@ -284,3 +284,7 @@ Per la teoria bisogna saper spiegare:
 - `[DA VERIFICARE]` La slide su traceroute chiede perché i ritardi misurati dopo il tratto transoceanico sembrino *diminuire* in alcuni salti: la risposta non è nel testo estratto. `[INT]` Probabilmente le misure variano per il ritardo di accodamento, che cambia da un probe all'altro, da confermare con il docente.
 - `[DA VERIFICARE]` Alcune slide (accesso DSL/cable, struttura di Internet, carovana, incapsulamento) hanno testo estratto in disordine; i valori numerici riportati sopra sono stati ricomposti dalle slide e vanno ricontrollati sul PDF.
 - La slide sul packet switching lascia aperta la domanda "come ottenere un comportamento circuit-like con il packet switching": è rinviata a capitoli successivi.
+
+## Esercizi svolti collegati
+
+Gli esercizi del capitolo 1 di Sereno (ritardi, store-and-forward, throughput, commutazione di circuito e di pacchetto) sono svolti in [12-esercizi-sereno-cap1-cap2.md](12-esercizi-sereno-cap1-cap2.md).
