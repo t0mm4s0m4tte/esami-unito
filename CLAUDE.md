@@ -24,4 +24,4 @@ Cartella di lavoro dell'Università di Torino, Informatica, 3° anno. Remote: `g
 
 ## Dove siamo (2026-11-12)
 
-Sessione di gennaio 2027: ASD (scritto 27/1), Reti, TWeb (scritto + progetto), EGTE. Aperti: lo stato dei laboratori ASD su Git, l'elenco dei project work di EGTE (~20/11), il riassunto di `06_tls.pdf` di Reti (le slide TWeb aggiornate sono già in `03` e `05`), le date degli scritti di Reti/TWeb/EGTE.
+Sessione di gennaio 2027: ASD (scritto 27/1), Reti, TWeb (scritto + progetto), EGTE. Aperti: lo stato dei laboratori ASD su Git, l'elenco dei project work di EGTE (~20/11), il cap. 6 di Reti (non ancora su Moodle) (TLS è in `15` di Reti, le slide TWeb aggiornate in `03` e `05`), le date degli scritti di Reti/TWeb/EGTE.

@@ -31,13 +31,13 @@ Reti si passa con due tipi di competenze: **esercizi numerici** (formule, tabell
 | Livello applicazione | 02, 04, 08 | medio | coperto |
 | Crittografia, autenticazione, PKI | 06, 07, 14 | alto (parte sicurezza) | coperto |
 | Controllo accessi | 13 | medio | coperto |
-| TLS | 06_tls.pdf | alto (sicurezza) | **da riassumere** |
+| TLS | 15 | alto (sicurezza) | coperto (2026-11-12) |
 | Collegamento (cap. 6) | - | medio | non su Moodle |
 | Malware e altre lezioni di Sicurezza | - | da capire | non ancora a lezione |
 
 ## Da fare, in ordine
 
-1. Riassumere `06_tls.pdf` e aggiungere il file 15 agli appunti.
+1. ~~Riassumere `06_tls.pdf`~~: fatto il 2026-11-12 (`appunti/15-tls.md`).
 2. Preparare le 14 schede teoria (una per argomento) e 20 esercizi numerici con soluzioni dai materiali di Sereno/Kurose.
 3. Chiedere o cercare la data dello scritto, il formato (carta o piattaforma, durata, se serve la calcolatrice) e il peso delle parti reti/sicurezza.
 4. Il 10/1 controllo di fattibilità (vedi piano-settimanale).
