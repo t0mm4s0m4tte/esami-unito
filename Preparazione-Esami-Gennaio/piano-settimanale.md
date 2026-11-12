@@ -61,4 +61,10 @@ Aggiornato il 2026-11-12 sul calendario "Appunti" (gli altri calendari non sono 
 - 3 blocchi TWeb del giovedì sera (7, 14, 21 gennaio) eliminati perché in conflitto con quelli nuovi;
 - 23 blocchi nuovi nelle ore delle lezioni, dal 23/12 al 22/1 (Reti mar/mer 14-16 e ven 11-13; TWeb gio 11-13 e ven 14-16; EGTE gio 16-19 e ven 16-18), saltando festivi (24-26/12, 31/12, 1/1, 6/1);
 - 7 eventi "tutto il giorno" con le scadenze: 16/11 controllo laboratori ASD, ~20/11 elenco project work EGTE, 10/1 punto di decisione, 24/1 consegna TWeb, 27/1 scritto ASD, 28/1 discussione TWeb, 8/2 consegna TWeb.
+Riorganizzazione del 2026-11-12 (dalle 17:00 in poi, lezione di EGTE di oggi compresa):
+- aggiunte le **lezioni di EGTE** (gio 16-19, ven 16-18) dal 12/11 al 27/11 (quelle di dicembre c'erano già; il 3 e 4/12 sono sospese); la lezione di oggi 16-19 è nel calendario;
+- i 3 blocchi ASD del giovedì 17-19 (12/11, 19/11, 26/11) si sovrapponevano alle lezioni di EGTE e sono stati eliminati: i due ripassi (cap. 08-09 e cap. 10-11) sono ora mercoledì 18/11 e 25/11 alle 16-17:30; la simulazione 2025/26 è sabato 28/11 14-17 (al posto di TWeb);
+- 3 blocchi del mercoledì mattina di dicembre (2, 9, 16) passano da ASD a **progetto TWeb** (scelta database e documenti, back-end Spring, front-end React);
+- 6 blocchi **EGTE** il lunedì 8:45-10:15 (16/11, 23/11, 30/11, 7/12, 14/12, 21/12) con le schede per capitolo, le domande aperte e la simulazione;
+- non ho aggiunto lezioni di ASD (orari non noti).
 Non toccati: gli eventi di lezione ("Reti (lezione)", "TWeb (lezione)", "EGTE (lezione)") fino al 18/12, gli eventi di febbraio e la settimana 25-29/1 (nessun blocco nuovo per non sovrapporre lo scritto). Non ho controllato se sul calendario principale esista già l'evento dello scritto di ASD.
