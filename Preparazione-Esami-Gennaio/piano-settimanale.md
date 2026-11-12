@@ -54,4 +54,11 @@ Ogni lunedì mattina: aggiorno il `piano-studio.md`, controllo Moodle per slide 
 
 ## Calendario Google
 
-Il vecchio piano ha 19 eventi "Appunti" (fino al 26/11) e la sessione invernale (da dicembre) già caricati. Non li ho toccati: li sostituisco solo se mi dici di sì. Eventi da creare: blocchi fissi nelle ore delle lezioni dal 23/12, controlli del 10/1 e del 24/1, scadenze nella tabella delle date.
+Aggiornato il 2026-11-12 sul calendario "Appunti" (gli altri calendari non sono stati toccati). Il calendario aveva già 114 eventi di studio; ho modificato solo questi:
+- 6 eventi ASD "[Da aggiornare] slot liberato" (25/11, 26/11, 1/12, 5/12, 8/12, 12/12) rinominati con esercizi concreti (codifica in C a mano, simulazione, asintotica, pseudocodice);
+- 6 blocchi ASD del giovedì e venerdì di gennaio (7, 8, 14, 15, 21, 22) accorciati a 8:45-10:45 per liberare le ore delle lezioni;
+- ASD del 28/1 (dopo lo scritto) trasformato in "TWeb ripasso teoria";
+- 3 blocchi TWeb del giovedì sera (7, 14, 21 gennaio) eliminati perché in conflitto con quelli nuovi;
+- 23 blocchi nuovi nelle ore delle lezioni, dal 23/12 al 22/1 (Reti mar/mer 14-16 e ven 11-13; TWeb gio 11-13 e ven 14-16; EGTE gio 16-19 e ven 16-18), saltando festivi (24-26/12, 31/12, 1/1, 6/1);
+- 7 eventi "tutto il giorno" con le scadenze: 16/11 controllo laboratori ASD, ~20/11 elenco project work EGTE, 10/1 punto di decisione, 24/1 consegna TWeb, 27/1 scritto ASD, 28/1 discussione TWeb, 8/2 consegna TWeb.
+Non toccati: gli eventi di lezione ("Reti (lezione)", "TWeb (lezione)", "EGTE (lezione)") fino al 18/12, gli eventi di febbraio e la settimana 25-29/1 (nessun blocco nuovo per non sovrapporre lo scritto). Non ho controllato se sul calendario principale esista già l'evento dello scritto di ASD.
