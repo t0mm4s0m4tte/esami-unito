@@ -1,4 +1,4 @@
-# 03 – Programmare lato client: JavaScript e TypeScript nell'ambiente browser
+# 03 – Programmare lato client: JavaScript e TypeScript nell'ambiente browser (aggiornato con le slide nascoste il 2026-11-12)
 
 Fonti: Drive › Terzo anno › Tecnologie Web › Slide Deck - TWeb › "02 - Programmare Lato Client" (Picardi e Mauro, 2026) per le sezioni fino a TypeScript; Moodle 2026/27 › `02-TWeb-JavascriptTypescriptTeoria-03-2627-ppt.pdf` ("3 - Programmare lato client", 73 slide, Picardi e Mauro) per la sezione su fetch, Promise, async/await e JSON (slide 35-73), che nel deck di Drive non c'era. Il resto del deck di Moodle (slide 1-34) ha gli stessi argomenti delle sezioni sotto, che non ho riconfrontato slide per slide [DA VERIFICARE].
 
@@ -380,6 +380,42 @@ Le opzioni significano:
 - `outDir`: dove mettere i `.js` generati.
 
 Organizzazione: i sorgenti TypeScript in una cartella `src`; il compilatore li trova da sé e replica la loro struttura di sottocartelle in `scripts` (`outDir`), con i `.js` al posto dei `.ts`. Le pagine HTML importano gli script da `scripts`: è questa la cartella da pubblicare su un web server. Per collaborare (es. via GitLab) basta `src`, perché `scripts` si rigenera compilando. Compilare: `npx tsc`.
+
+## Integrazione 2026-11-12: slide aggiornate (con le slide nascoste)
+
+Il 12/11 la docente ha ricaricato le slide di JavaScript, TypeScript, Promise e React perché erano senza le slide nascoste, che fanno parte delle dispense: l'esame di teoria verte su slide e dispense e ha domande a risposta multipla e aperte (annuncio sul forum Moodle). Sorgente: `_moodle-raw/26-27-nuovi/Tecnologie-Web/02-TWeb-JavascriptTypescriptTeoria-03-2627-ppt.pdf`. Quasi tutto il testo era già qui; mancavano questi punti.
+
+### Closure e garbage collector
+Se si pone `risultato = null`, si toglie l'unico riferimento alla funzione interna: la funzione e `somearray` diventano irraggiungibili e il garbage collector li libererà. Il *quando* lo decide il motore (V8, SpiderMonkey…) e non si può forzare.
+
+### TypeScript: espressioni di tipo
+Imparare TypeScript è soprattutto saper scrivere espressioni di tipo; superare il controllo dei tipi è già una forma preliminare di test.
+- **Tipi base**: `string`, `boolean`, `number`, `undefined`, `null`, `bigint`, `symbol`; il **nome di una classe** (solo oggetti di quella classe); **`void`** per funzioni senza ritorno.
+- **Array**: `number[]`, `Studente[]`. **Tupla**: array di lunghezza fissa con tipi anche diversi: `[number, string, Studente]`.
+- **Tipo unione** `A | B`: `(number | string)[]`; `Studente | null` (molto frequente per i ritorni); anche elenchi di valori ammessi: `"marzo" | "aprile" | "maggio"`, `0 | 1 | 2 …`.
+- **Tipo funzione**: `(p1: T1, …, pN: TN) => TRET`; i nomi `p1…pN` sono solo segnaposto. Esempio: `function superCalcolo(dati: number[], callback: (out: number[]) => boolean): void`; il tipo di una variabile che la contiene è `(x: number[], y: (z: number[]) => boolean) => void`.
+- **Classi**: dichiarano le proprietà con i tipi e la visibilità `public` (default), `private`, `protected`; **`readonly`** per una proprietà assegnata nel costruttore e mai più modificata. TypeScript verifica che tutte le proprietà siano inizializzate nel costruttore: `nome!: tipo` salta il controllo (verrà inizializzata dopo), `nome?: tipo` la dichiara **opzionale**. Le uniche proprietà aggiungibili o togliibili durante la vita di un oggetto sono quelle opzionali.
+- **Interfacce**: costrutto solo dichiarativo, senza traccia nel codice compilato; elenco di proprietà (anche funzioni, anche opzionali con `?`). Un oggetto la rispetta se ha le proprietà non opzionali: un **object literal** deve corrispondere esattamente (nessuna proprietà in più); un oggetto di una classe `C` la rispetta se `C` dichiara le proprietà non opzionali (può averne altre); `class C implements I`. La DOM API in TS è definita come interfacce; i tipi delle librerie JS stanno in file **`.d.ts`** (es. `lib.dom.d.ts` nel package `typescript`).
+- **Dizionari indicizzati**: un oggetto usato come mappa va dichiarato `const repo: {[chiave: string]: Persona}`; TypeScript non permette di accedere a proprietà non dichiarate nel tipo, salvo che sia un dizionario indicizzato; le chiavi sono solo `string` o `number`.
+- **Generics**: comportamento indipendente dal tipo; `new Set<number>()`, `function middle<T>(lista: T[]): T { … }` (`T` è la variabile di tipo), classi come `Stack<T>`; anche `Promise<T>`.
+
+### Accessor: getter e setter
+Caratteristica di JavaScript che serve a esprimere **proprietà calcolate**, ad esempio per far implementare a una classe un'interfaccia che richiede una proprietà `denominazione`, calcolata da `nome` e `cognome`: `get denominazione(): string { … }` e `set denominazione(den: string) { … }`. Si usano come proprietà (`tizio.ragioneSociale = "x"`). Il getter non ha parametri e restituisce il valore; il setter non restituisce nulla e prende il nuovo valore; se ci sono entrambi i tipi devono coincidere; con il solo `get` la proprietà è **readonly**. Servono anche a controllare l'accesso alle proprietà interne senza renderle `private` (limiti sui numeri, formato dei testi).
+
+### Configurazione di `tsconfig.json` (dettaglio)
+`target` (versione JS in uscita; default es2016, noi `es2020`); `module` (`es2015` per il browser, perché introduce `import/export`; `CommonJS` è la sintassi di Node, `nodenext` per l'interoperabilità); `esModuleInterop` (interoperabilità fra i due stili di moduli, utile con Node); `forceConsistentCasingInFileNames` (rileva import con maiuscole/minuscole inconsistenti); `strict` (più severità sui tipi); `skipLibCheck` (non controlla i tipi dentro le librerie); `outDir` (dove scrivere i `.js`: struttura speculare ai sorgenti). I sorgenti `.ts` stanno in `src`, l'output in `scripts`; per il web server serve `scripts`, per collaborare via GitLab serve `src`.
+
+### Dipendenze locali/globali, dev/runtime
+npm installa a livello **globale** (come librerie del s.o.) o **locale** (nella cartella del progetto): oggi si usa il locale perché lo sviluppo è indipendente dal dispositivo e si collabora con Git/GitLab. **Dev dependencies**: servono solo in sviluppo (TypeScript ne è un esempio); **runtime dependencies**: servono all'esecuzione e vanno incluse nella distribuzione. La distinzione conta quando il progetto viene confezionato.
+
+### AJAX, `fetch`, Axios
+Prima di AJAX, la risposta a una richiesta HTTP fatta dal codice veniva intercettata dal browser, che mostrava una nuova pagina (e resettava l'ambiente di esecuzione). Con **AJAX** la risposta è intercettata dall'ambiente e arriva al programma tramite una callback, senza ricaricare. La **fetch API** (2015) sostituisce `XMLHttpRequest` e incorpora AJAX; è asincrona e restituisce una `Promise` (introdotta nella stessa edizione di JS) invece di prendere una callback. **Axios** è una libreria pre-fetch ancora usata perché la richiesta è un po' più semplice e funziona anche fuori dal browser; è ammessa nel progetto ma non obbligatoria. Parametri di `fetch(url, init)`: `url` (esterna, assoluta o relativa: la assoluta parte dalla radice del dominio, la relativa dalla location della pagina), `init: RequestInit` con `method` (default `"GET"`), `headers` (dizionario, es. `Content-Type`), `body` (stringa). Il problema delle callback annidate: codice scritto "a rovescio" rispetto all'ordine di esecuzione, errori difficili da tracciare, complicato propagare i risultati a cascata. Le Promise non aggiungono capacità nuove ma rendono il codice più leggibile.
+
+### Server-side API
+Un'app server-side espone un accesso al Data Model (rendere persistenti i dati è naturale sul server; la persistenza client è limitata a un solo utente e dispositivo). L'API dichiara per ogni funzionalità come si invoca, quali input servono e che effetti/output produce. In HTTP:
+- **qualificare la funzionalità**: con il **pathname** (le *route*, es. `/bookshelf/books`, `/login`) e il **method** (GET per fornire dati, POST per inserirne; es. `GET /bookshelf/collections` elenca, `POST /bookshelf/collections` aggiunge);
+- **input**: nel **body** della richiesta (solo POST, per input strutturati e corposi), nella **query string** (`?min=5&max=100&sort=alphabetical`, per valori semplici, con GET e POST), o nei segmenti della **route parametrica** (`GET /bookshelf/books/:id`, per input che identificano una risorsa: id o nomi brevi);
+- **effetti e risposta**: le modifiche al Data Model e la struttura del body della response.
 
 ## Cose da saper fare all'esame
 

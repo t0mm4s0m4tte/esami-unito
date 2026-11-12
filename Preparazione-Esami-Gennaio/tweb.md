@@ -41,6 +41,6 @@ Dettaglio e decisioni sono nel `brain/` del progetto, non qui.
 
 ## Da fare
 
-- Riassumere le slide nuove di JS/TS e React (appunti 03 e 05) e allineare il README della materia.
+- ~~Riassumere le slide nuove di JS/TS e React~~: fatto il 2026-11-12 (`03` integrato, `05-react.md` nuovo).
 - Controllare quando escono le slide di Spring/JPA.
 - Chiedere al professore le questioni aperte di OB13 (icone, animazioni) prima di sviluppare il front-end.
