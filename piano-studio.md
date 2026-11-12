@@ -3,6 +3,8 @@
 Obiettivo dichiarato: laurea a novembre 2027. Lavoro in corso fino al 2026-11-30; dopo, da decidere.
 Ore: 15 h/sett totali (lezioni incluse, 10 h di lezione) fino al 2026-11-30; da dicembre da definire.
 
+> **Aggiornamento 2026-11-12: sessione di gennaio 2027 con ASD, Reti, TWeb ed EGTE.** Il piano dettagliato (settimane, ore, scadenze, simulazioni) è in [Preparazione-Esami-Gennaio/](Preparazione-Esami-Gennaio/README.md). Dove i due documenti si contraddicono vale il nuovo. Dal 23/12 lo studio sta negli stessi orari delle lezioni (Reti mar/mer 14-16 e ven 11-13, TWeb gio 11-13 e ven 14-16, EGTE gio 16-19 e ven 16-18). Le ore disponibili non bastano per tutto a gennaio: ASD, EGTE e scritto TWeb a gennaio, progetto TWeb sull'8/2, Reti dipende dalla data dello scritto.
+
 ## Da dare: 129 CFU
 
 ### Recuperi (frequentati, non superati): 66 CFU
